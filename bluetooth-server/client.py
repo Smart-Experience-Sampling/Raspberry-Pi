@@ -1,8 +1,8 @@
 import socket
 
 client = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
-mac = input("Enter mac address: ")
-client.connect(mac)
+# mac = input("Enter mac address: ")
+client.connect(("ac:74:b1:87:2b:4c", 4))
 
 
 try:

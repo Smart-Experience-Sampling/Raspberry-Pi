@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" >
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+<body>
+	<div class="information">
+		{% if vraag %}
+			<h1 class="vraag">{{vraag}}</h1>
+		{% else %}
+			<h1 class="vraag">Geen vraag gevonden</h1>
+		{% endif %}
+		{% if clickers %}
+			{% if clickers > 1 %}
+				<p class="clicker"><span style="padding-left: 5px;">{{clickers}}</span> clickers beschikbaar</p>
+			{% else %}
+				<p class="clicker">{{clickers}} clicker beschikbaar</p>
+			{% endif %}
+		{% else %}
+			<p class="clicker">Geen clicker info gevonden</p>
+		{% endif %}
+	</div>
+</body>
+</html>
