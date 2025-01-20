@@ -5,24 +5,11 @@ from datetime import datetime
 import json
 
 # ports = serial.tools.list_ports.comports()
-serial_inst = serial.Serial(baudrate=115200, port="COM3")
+__BAUDRATE__ = 115200
+__PORT__ = "COM3"
+__API_URL__ = "http://localhost:5000/"
+serial_inst = serial.Serial(baudrate=__BAUDRATE__, port=__PORT__)
 
-# port_list = []
-
-# i = 1
-# for port in ports:
-# 	port_list.append(str(port))
-# 	print(f"{i}. {str(port)}")
-# 	i += 1
-
-# val = int(input("Select Port: "))
-# # print(f"Selected com port -> {}")
-
-# serial_inst.baudrate = 9600
-# serial_inst.port = port_list[val-1]
-# serial_inst.open()
-
-# inp = b'159,3\n'.decode()
 
 def decode(data):
     bits = 32
@@ -51,17 +38,6 @@ def decode(data):
         "beacons": beacons,
     }
 
-# data_dict = {
-#     "clicker_id": "123",
-#     "click_time": datetime.now(),
-#     "beacons": {"klfadsf": 100}
-# }
-# requests.post(
-#             "http://localhost:5000/click",
-#             data=data_dict
-#         )
-# # val = b'255 20 49 9 88 159 72 74 134 83 0 54 136 28 56 144 72 74 134 83 0 80 \n'
-
 
 while True:
     value = str(serial_inst.readline())
@@ -76,11 +52,11 @@ while True:
         temp = ""
         y = 0
         for v in x:
-            
+
             y += 1
             if y <= 6:
                 continue
-            if v == ' ':
+            if v == " ":
                 print("APPENDING")
                 val.append(temp)
                 temp = ""
@@ -91,26 +67,39 @@ while True:
         print(val)
         beacons = []
 
-
         num = int(int(val[0]) / 10)
 
         # print(meter, int(val[10]), int(val[i+11]), "+ meter ",  centimeter)
 
         # beacons.append({"beacon_id": beacon_id, "centimeter": centimeter})
         for i in range(num):
-            beacon_id = val[(i*10)+1] + val[(i*10)+2] + val[(i*10)+3] + val[(i*10)+4] + val[(i*10)+5] + val[(i*10)+6] + val[(i*10)+7] + val[(i*10)+8]
-            meter = int(val[(i*10)+9]) * 100
-            centimeter = int(val[(i*10)+10]) + meter
+            beacon_id = (
+                val[(i * 10) + 1]
+                + val[(i * 10) + 2]
+                + val[(i * 10) + 3]
+                + val[(i * 10) + 4]
+                + val[(i * 10) + 5]
+                + val[(i * 10) + 6]
+                + val[(i * 10) + 7]
+                + val[(i * 10) + 8]
+            )
+            meter = int(val[(i * 10) + 9]) * 100
+            centimeter = int(val[(i * 10) + 10]) + meter
 
-            print(meter, int(val[(i*10)+9]), int(val[(i*10)+10]), "+ meter ",  centimeter)
+            print(
+                meter,
+                int(val[(i * 10) + 9]),
+                int(val[(i * 10) + 10]),
+                "+ meter ",
+                centimeter,
+            )
 
             beacons.append({"beacon_id": beacon_id, "centimeter": centimeter})
 
         data_dict = {"beacon_num": num, "beacons": beacons}
 
-        requests.post("http://localhost:5000/click", json=data_dict)
-        
+        requests.post(f"{__API_URL__}click", json=data_dict)
+
         # Either in json, data or body. Either as string or as a dict
-        
 
     time.sleep(0.1)
