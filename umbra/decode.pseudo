@@ -1,0 +1,37 @@
+var bytes;
+serial comm read -> bytes;
+
+var target = bytes[0:32];
+var beacon_count = bytes[33:65];
+var uuid = bytes[66:98];
+var timestamp = bytes[99:131];
+list beacons;
+
+x = 132
+idx = 2
+for i in range(beacon_count) {
+	y = x + 33;
+	beacons.append(
+	{
+		"beacon_id": bytes[x:x+32],
+		"tof": bytes[y:y+32]
+	}
+	);
+	x += 33 * idx;
+	idx ++;
+}
+
+```
+struct conn_t {
+  uint32_t beacon_uuid;
+  uint32_t TOF;
+};
+
+struct msg {
+  uint32_t target : 24;
+  uint32_t beacon_count : 8;
+  uint32_t uuid;
+  uint32_t timestamp;
+  conn_t conn[];    // arr size == beacon_count
+};
+```
