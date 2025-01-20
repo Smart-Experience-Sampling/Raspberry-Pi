@@ -11,34 +11,6 @@ __API_URL__ = "http://localhost:5000/"
 serial_inst = serial.Serial(baudrate=__BAUDRATE__, port=__PORT__)
 
 
-def decode(data):
-    bits = 32
-    target = int(data[:bits], 2)
-    num_beacons = int(str(data[: bits * 2])[bits:], 2)
-    uuid = int(str(data[: bits * 3])[bits * 2 :], 2)
-    timestamp = int(str(data[: bits * 4])[bits * 3 :], 2)
-    # print(str(data[:bits*4])[bits*3:])
-
-    beacons = []
-
-    x = 4
-    for i in range(num_beacons):
-        uuid_b = int(str(data[: bits * (x + 1)])[bits * x :], 2)
-        x += 1
-        tof = int(str(data[: bits * (x + 1)])[bits * x :], 2)
-        x += 1
-
-        beacons.append({"uuid": uuid_b, "tof": tof})
-
-    return {
-        "target": target,
-        "num_beacons": num_beacons,
-        "uuid": uuid,
-        "timestamp": timestamp,
-        "beacons": beacons,
-    }
-
-
 while True:
     value = str(serial_inst.readline())
 
